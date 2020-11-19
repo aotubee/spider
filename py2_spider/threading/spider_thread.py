@@ -60,7 +60,7 @@ def main():
         i.join()
 
     while not q.empty():
-        print q.get()
+        print (q.get())
 
 if __name__=="__main__":
     #开始时间
@@ -68,5 +68,5 @@ if __name__=="__main__":
     #执行方法
     main()
     #当前时间减去开始时间
-    print '[info]耗时：%s'%(time.time()-start)
+    print ('[info]耗时：%s'%(time.time()-start))
 
