@@ -19,6 +19,7 @@ class Spider(object):
 
         # 财务报表页面
         cwbb_url = 'https://q.stock.sohu.com/cn/%s/cwzb.shtml' % str(code)
+        print(cwbb_url)
         headers = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (sKHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"}
 
         # 解析主页信息
@@ -32,18 +33,20 @@ class Spider(object):
         cwbb_res = requests.get(cwbb_url, headers=headers)
         cwbb_html = etree.HTML(cwbb_res.text)
         cwbb_zj = cwbb_html.xpath('/html/body/div[4]/div[2]/div[2]/div[2]/div/div[2]/table//tr[31]/td[1]/text()')    #总计
+        growrate = cwbb_html.xpath('/html/body/div[4]/div[2]/div[2]/div[2]/div/div[2]/table//tr[25]/td[2]/span/text()')    # 净利润增长率
         fzpers = cwbb_html.xpath('/html/body/div[4]/div[2]/div[2]/div[2]/div/div[2]/table//tr[11]/td[1]/text()')    # 资产负债率
+        gr = ['净利润增长率:'] + growrate
         fzper = ''.join(fzpers).strip()
         stocks = []
         stocks.append('资产负债率:')
-        stocks.append(fzper)
+        stocks.append("%.2f%%" % float(fzper))    # 加上%
 
         if int(code) > 600000:
-            print(name + price + info[38:40] + info[46:48] + info[28:30] + info[20:22] + info[30:32] + stocks)
+            print(' '.join(name + price + info[38:40] + info[46:48] + info[28:30] + info[20:22] + info[30:32] + gr + stocks))
         elif 600000 > int(code) > 300000: 
-            print(name + price + info[22:24] + info[30:32] + info[40:42] + info[32:34] + info[42:44] + stocks)
+            print(' '.join(name + price + info[22:24] + info[30:32] + info[40:42] + info[32:34] + info[42:44] + gr + stocks))
         else:
-            print(name + price + info[38:40] + info[46:48] + info[28:30] + info[20:22] + info[30:32] + stocks)
+            print(' '.join(name + price + info[38:40] + info[46:48] + info[28:30] + info[20:22] + info[30:32] + gr + stocks))
         
 if __name__=="__main__":
     code = input("请输入股票代码：")
